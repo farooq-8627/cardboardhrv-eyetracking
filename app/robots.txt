@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /about
+Allow: /monitor
+
+Disallow: /connect/
+Disallow: /api/
+
+Sitemap: https://cardboardhrv.com/sitemap.xml 

@@ -1,0 +1,24 @@
+{
+	"rules": {
+		"sessions": {
+			"$sessionId": {
+				".read": true,
+				".write": true,
+				"signals": {
+					".indexOn": ["timestamp"],
+					".read": true,
+					".write": true
+				},
+				"devices": {
+					".read": true,
+					".write": true
+				},
+				"heartRateData": {
+					".read": true,
+					".write": true,
+					".indexOn": ["timestamp"]
+				}
+			}
+		}
+	}
+}

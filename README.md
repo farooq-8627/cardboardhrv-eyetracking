@@ -1,104 +1,138 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# CardboardHRV: Cost-Effective Heart Rate Variability Monitoring System
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
-
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+CardboardHRV is a web-based application that enables real-time heart rate variability (HRV) monitoring using a smartphone's camera with optical fiber attachment. The system provides professional-grade analysis for researchers and individuals.
 
 ## Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+- Real-time HRV monitoring through smartphone camera
+- Advanced eye tracking capabilities
+- Pupil diameter analysis
+- WebSocket-based real-time data streaming
+- Comprehensive HRV metrics calculation
+- Modern, responsive user interface
+- Secure data storage with Supabase
 
-## Demo
+## Prerequisites
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+- Node.js 18+ and npm
+- Python 3.8+
+- A smartphone with a camera
+- Optical fiber attachment (for PPG signal acquisition)
 
-## Deploy to Vercel
+## Project Structure
 
-Vercel deployment will guide you through creating a Supabase account and project.
+```
+cardboardhrv/
+├── app/                    # Next.js application pages
+├── components/            # React components
+├── lib/                   # Utility functions and services
+├── backend/              # Python FastAPI backend
+│   ├── main.py          # WebSocket and HRV processing
+│   └── requirements.txt  # Python dependencies
+└── public/               # Static assets
+```
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+## Setup Instructions
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+### Frontend Setup
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
-
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
-
-## Clone and run locally
-
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
-
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+1. Install dependencies:
 
    ```bash
-   yarn create next-app --example with-supabase with-supabase-app
+   npm install
    ```
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
-
-3. Use `cd` to change into the app's directory
-
-   ```bash
-   cd with-supabase-app
-   ```
-
-4. Rename `.env.example` to `.env.local` and update the following:
+2. Create a `.env.local` file with your Supabase credentials:
 
    ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
-
-5. You can now run the Next.js local development server:
-
+3. Run the development server:
    ```bash
    npm run dev
    ```
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+### Backend Setup
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+1. Create a Python virtual environment:
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-## Feedback and issues
+2. Install Python dependencies:
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## More Supabase examples
+3. Start the backend server:
+   ```bash
+   python main.py
+   ```
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+## Usage
+
+1. Access the web application at `http://localhost:3000`
+2. Navigate to the "Live Monitor" page
+3. Connect your smartphone and ensure it's on the same network
+4. Attach the optical fiber to your smartphone's camera
+5. Position the optical fiber on your forehead
+6. Click "Start Stream" to begin monitoring
+
+## HRV Metrics
+
+The system calculates the following HRV metrics in real-time:
+
+- Heart Rate (bpm)
+- RR Intervals (ms)
+- SDNN (ms)
+- RMSSD (ms)
+- pNN50 (%)
+- LF/HF Ratio
+
+## Development
+
+### Frontend Development
+
+The frontend is built with:
+
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Supabase
+- WebSocket for real-time communication
+
+### Backend Development
+
+The backend uses:
+
+- FastAPI
+- OpenCV for image processing
+- NumPy for signal processing
+- WebSocket for real-time data streaming
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+Based on the research paper:
+"CardboardHRV: Bridging Virtual Reality and Biofeedback with a Cost-Effective Heart Rate Variability System"
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact the maintainers.
