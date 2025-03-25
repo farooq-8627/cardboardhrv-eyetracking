@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ConnectionService } from "@/services/ConnectionService";
+import {
+	ConnectionService,
+	ConnectionStatus,
+} from "@/services/ConnectionService";
 
 export const MobileCamera = () => {
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -26,13 +29,21 @@ export const MobileCamera = () => {
 				}
 
 				// Initialize connection service
-				connectionService.current = new ConnectionService({
-					iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-					onConnected: () => setIsProcessing(true),
-					onDisconnected: () => setIsProcessing(false),
-				});
+				// Create a random session ID for this connection
+				const sessionId = Math.random().toString(36).substring(2, 15);
+				connectionService.current = new ConnectionService(
+					sessionId,
+					"mobile",
+					(status: ConnectionStatus) => {
+						if (status === "connected") {
+							setIsProcessing(true);
+						} else if (status === "disconnected" || status === "failed") {
+							setIsProcessing(false);
+						}
+					}
+				);
 
-				await connectionService.current.addStream(stream);
+				await connectionService.current.initializeAsMobile(stream);
 				startProcessing();
 			} catch (error) {
 				console.error("Error accessing camera:", error);
@@ -74,9 +85,9 @@ export const MobileCamera = () => {
 			const redChannelData = processRedChannel(frame);
 
 			// Send data through WebRTC
-			connectionService.current?.sendData({
+			connectionService.current?.sendHeartRateData({
+				redValue: redChannelData,
 				timestamp: Date.now(),
-				data: redChannelData,
 			});
 
 			requestAnimationFrame(processFrame);

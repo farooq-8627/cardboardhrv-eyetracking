@@ -46,35 +46,52 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ sessionId }) => {
 	const chartRef = useRef(null);
 
 	useEffect(() => {
-		const subscription = supabase
-			.from(`heart_rate_data:session_id=eq.${sessionId}`)
-			.on("INSERT", (payload) => {
-				const newData = payload.new;
+		if (!sessionId) return;
 
-				setHeartRateData((prev) => {
-					const updated = [...prev, newData.heart_rate].slice(-60); // Keep last 60 seconds
-					return updated;
-				});
+		// Create a realtime channel
+		const channel = supabase
+			.channel(`heart-rate-${sessionId}`)
+			.on(
+				"postgres_changes",
+				{
+					event: "INSERT",
+					schema: "public",
+					table: "heart_rate_data",
+					filter: `session_id=eq.${sessionId}`,
+				},
+				(payload) => {
+					const newData = payload.new;
 
-				setTimestamps((prev) => {
-					const newTimestamp = new Date(newData.timestamp).toLocaleTimeString();
-					return [...prev, newTimestamp].slice(-60);
-				});
+					setHeartRateData((prev) => {
+						const updated = [...prev, newData.heart_rate].slice(-60); // Keep last 60 seconds
+						return updated;
+					});
 
-				setCurrentHR(newData.heart_rate);
+					setTimestamps((prev) => {
+						const newTimestamp = new Date(
+							newData.timestamp
+						).toLocaleTimeString();
+						return [...prev, newTimestamp].slice(-60);
+					});
 
-				// Update HRV metrics every 5 seconds
-				if (heartRateData.length % 5 === 0) {
-					const metrics = hrvCalculator.calculateMetrics([newData.rr_interval]);
-					setHRVMetrics(metrics);
+					setCurrentHR(newData.heart_rate);
+
+					// Update HRV metrics every 5 seconds
+					if (heartRateData.length % 5 === 0) {
+						const metrics = hrvCalculator.calculateMetrics([
+							newData.rr_interval,
+						]);
+						setHRVMetrics(metrics);
+					}
 				}
-			})
+			)
 			.subscribe();
 
 		return () => {
-			supabase.removeSubscription(subscription);
+			// Cleanup subscription when component unmounts or sessionId changes
+			supabase.removeChannel(channel);
 		};
-	}, [sessionId]);
+	}, [sessionId, hrvCalculator]);
 
 	const chartData = {
 		labels: timestamps,

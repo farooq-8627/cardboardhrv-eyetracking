@@ -34,21 +34,40 @@ export const PhoneConnect: React.FC<PhoneConnectProps> = ({ onConnect }) => {
 
 		initializeConnection();
 
-		// Subscribe to connection status changes
-		const subscription = supabase
-			.from(`connections:id=eq.${connectionId}`)
-			.on("UPDATE", (payload) => {
-				if (payload.new.status === "connected") {
-					setConnectionStatus("connected");
-					onConnect(connectionId);
+		return () => {
+			// Cleanup function
+		};
+	}, []);
+
+	// Set up the subscription when connectionId changes
+	useEffect(() => {
+		if (!connectionId) return;
+
+		// Create a realtime channel
+		const channel = supabase
+			.channel(`connection-${connectionId}`)
+			.on(
+				"postgres_changes",
+				{
+					event: "UPDATE",
+					schema: "public",
+					table: "connections",
+					filter: `id=eq.${connectionId}`,
+				},
+				(payload) => {
+					if (payload.new.status === "connected") {
+						setConnectionStatus("connected");
+						onConnect(connectionId);
+					}
 				}
-			})
+			)
 			.subscribe();
 
 		return () => {
-			supabase.removeSubscription(subscription);
+			// Cleanup subscription when component unmounts or connectionId changes
+			supabase.removeChannel(channel);
 		};
-	}, []);
+	}, [connectionId, onConnect, supabase]);
 
 	return (
 		<div className="max-w-2xl mx-auto p-8">

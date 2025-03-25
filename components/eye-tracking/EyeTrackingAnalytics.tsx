@@ -37,7 +37,7 @@ interface EyeTrackingAnalyticsProps {
 
 export function EyeTrackingAnalytics({ data }: EyeTrackingAnalyticsProps) {
 	const { theme } = useTheme();
-	const chartRef = useRef<ChartJS>(null);
+	const chartRef = useRef<any>(null);
 
 	const chartData: ChartData<"line"> = {
 		labels: data.map((d) => new Date(d.timestamp).toLocaleTimeString()),
