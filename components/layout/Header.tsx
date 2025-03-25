@@ -12,6 +12,7 @@ const navigationItems = [
 	{ path: "/monitor", label: "Monitor" },
 	{ path: "/connect-phone", label: "Connect Phone" },
 	{ path: "/about", label: "About" },
+	{ path: "/eye-tracking", label: "Eye Tracking" },
 ];
 
 export function Header() {
